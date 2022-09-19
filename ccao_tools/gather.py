@@ -1,9 +1,5 @@
-import pandas as pd
-import csv
 import snscrape.modules.twitter as twitter
 import snscrape.modules.reddit as reddit
-
-from os import path, mkdir
 
 from . import sql
 
@@ -51,7 +47,7 @@ def basic_query_post(db_cnx, context_id, query, max_results=5):
             # TODO - Verbose logging of e?
             raise e
 
-# TODO - These two reddit methods should be one method with a flag or something. Oof.
+
 def basic_query_comment(db_cnx, context_id, query, max_results=5):
     search_str = f"{query}"
     reddit_res = reddit.RedditSearchScraper(search_str, submissions=False).get_items()

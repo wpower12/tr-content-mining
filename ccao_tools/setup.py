@@ -1,10 +1,3 @@
-"""
-I'd like to track the 'migrations' and stuff I'd need in order to spin the entire database up on another machine.
-So all the database creation, etc.
-
-I'm sure this will use some stuff from the db module.
-"""
-
 SQL_USER_TABLES = [
     """ 
     CREATE TABLE `user_twitter` (
@@ -162,6 +155,7 @@ SQL_SND_TABLES = [
 
 def create_schema(cnx, db_name, drop_existing=False):
     cur = cnx.cursor()
+
     if drop_existing:
         cur.execute(f"DROP DATABASE IF EXISTS {db_name};")
 

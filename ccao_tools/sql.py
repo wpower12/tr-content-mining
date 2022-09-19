@@ -1,5 +1,3 @@
-
-
 INSERT_CONTEXT = (
     "INSERT INTO `context`"
     "(`experiment_id`, `context_desc`, `context_query`)"
