@@ -3,7 +3,7 @@ from decouple import config
 
 from ccao_tools import setup, gather, util
 
-DATABASE_NAME = "ccao_project_00"
+DATABASE_NAME = "ccao_project_05"
 EXP_ID = "initial_00"  # Ideally, we have a document explaining what each of these are 'for' somewhere in gdrive.
 
 LOG_DIR = "data/logs/03_run_basic_gather_pipeline"
