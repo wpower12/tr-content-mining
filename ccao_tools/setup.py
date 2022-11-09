@@ -68,24 +68,30 @@ SQL_CONTEXT_TABLES = [
     """,
     """
     CREATE TABLE `context_tweet` (
+        `cc_pair_tweet_id` INT NOT NULL AUTO_INCREMENT, 
         `context_id` INT NOT NULL,
         `content_tweet_id` BIGINT(20) NOT NULL,
+        PRIMARY KEY (`cc_pair_tweet_id`),
         FOREIGN KEY (`context_id`) REFERENCES `context`(`context_id`),
         FOREIGN KEY (`content_tweet_id`) REFERENCES `content_tweet`(`tweet_id`)
     );
     """,
     """
     CREATE TABLE `context_post` (
+        `cc_pair_post_id` INT NOT NULL AUTO_INCREMENT, 
         `context_id` INT NOT NULL,
         `content_post_id` VARCHAR(16) NOT NULL,
+        PRIMARY KEY (`cc_pair_post_id`),
         FOREIGN KEY (`context_id`) REFERENCES `context`(`context_id`),
         FOREIGN KEY (`content_post_id`) REFERENCES `content_post`(`post_id`)
     );
     """,
     """
     CREATE TABLE `context_comment` (
+        `cc_pair_comment_id` INT NOT NULL AUTO_INCREMENT, 
         `context_id` INT NOT NULL,
         `content_comment_id` VARCHAR(16) NOT NULL,
+        PRIMARY KEY (`cc_pair_comment_id`),
         FOREIGN KEY (`context_id`) REFERENCES `context`(`context_id`),
         FOREIGN KEY (`content_comment_id`) REFERENCES `content_comment`(`comment_id`)
     );
@@ -153,6 +159,56 @@ SQL_SND_TABLES = [
     """
 ]
 
+SQL_LABEL_TABLES = [
+    """
+    CREATE TABLE `question` (
+        `question_id` INT NOT NULL AUTO_INCREMENT,
+        `text` LONGTEXT NOT NULL,
+        PRIMARY KEY (`question_id`)
+    );
+    """,
+    """
+    CREATE TABLE `labeler` (
+        `labeler_id` INT NOT NULL AUTO_INCREMENT,
+        `name` MEDIUMTEXT NOT NULL,
+        PRIMARY KEY (`labeler_id`)
+    );
+    """,
+    """
+    CREATE TABLE `answer_tweet` (
+        `question` INT NOT NULL,
+        `ccp_tweet_id` INT NOT NULL,
+        `answer` BOOL NOT NULL,
+        `labeler` INT NOT NULL,
+        FOREIGN KEY (`labeler`) REFERENCES `labeler` (`labeler_id`),
+        FOREIGN KEY (`question`) REFERENCES `question` (`question_id`),
+        FOREIGN KEY (`ccp_tweet_id`) REFERENCES `context_tweet` (`cc_pair_tweet_id`)
+    );
+    """,
+    """
+    CREATE TABLE `answer_post` (
+        `question` INT NOT NULL,
+        `ccp_post_id` INT NOT NULL,
+        `answer` BOOL NOT NULL,
+        `labeler` INT NOT NULL,
+        FOREIGN KEY (`labeler`) REFERENCES `labeler` (`labeler_id`),
+        FOREIGN KEY (`question`) REFERENCES `question` (`question_id`),
+        FOREIGN KEY (`ccp_post_id`) REFERENCES `context_post` (`cc_pair_post_id`)
+    );
+    """,
+    """
+    CREATE TABLE `answer_comment` (
+        `question` INT NOT NULL,
+        `ccp_comment_id` INT NOT NULL,
+        `answer` BOOL NOT NULL,
+        `labeler` INT NOT NULL,
+        FOREIGN KEY (`labeler`) REFERENCES `labeler` (`labeler_id`),
+        FOREIGN KEY (`question`) REFERENCES `question` (`question_id`),
+        FOREIGN KEY (`ccp_comment_id`) REFERENCES `context_comment` (`cc_pair_comment_id`)
+    );
+    """,
+]
+
 def create_schema(cnx, db_name, drop_existing=False):
     cur = cnx.cursor()
 
@@ -176,6 +232,10 @@ def create_schema(cnx, db_name, drop_existing=False):
 
     print("creating snd tables")
     for sql in SQL_SND_TABLES:
+        cur.execute(sql)
+
+    print("creating labeling tables")
+    for sql in SQL_LABEL_TABLES:
         cur.execute(sql)
 
     
